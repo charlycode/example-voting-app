@@ -13,8 +13,13 @@ spec:
       - image: postgres:9.4
         name: db
         volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: db-data
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+          subPath: data-01
       volumes:
-      - name: db-data
-        emptyDir: {} 
+      - name: postgres-storage
+        gcePersistentDisk:
+          fsType: ext4
+          # This GCE PD must already exist -
+          # see https://kubernetes.io/docs/concepts/storage/volumes/#gcepersistentdisk
+          pdName: example-disk
